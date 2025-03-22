@@ -33,37 +33,40 @@ setInterval(() => {
 tempLoad();
 
 const calculateTemp = () => {
-    const numberTemp = document.getElementById('temp').value;
-    // console.log(numberTemp);
+    let numberTemp = parseFloat(document.getElementById('temp').value);
 
-    const tempSelected = document.querySelector('#temp_diff');
-    const valeTemp = temp_diff.options[tempSelected.selectedIndex].value;
-    // console.log(valeTemp);
-
-
-    // Convert temperature from Celcius to Fahrenheit
-    const celTOfah = (cel) => {
-        let fahrenheit = (cel * (9 / 5) + 32);
-        return fahrenheit;
+    if (isNaN(numberTemp)) { 
+        document.getElementById('resultContainer').innerHTML = "❌ Please enter a valid temperature!";
+        return;
     }
 
-    // Convert temperature from Fahrenheit to Celsius
-    const fahTOcel = (fehr) => {
-        let celsius = ((fehr - 32) * 5 / 9);
-        return celsius;
-    }
+    const tempSelected = document.getElementById('temp_diff'); 
+    const valeTemp = tempSelected.options[tempSelected.selectedIndex].value;
+
+    const celTOfah = (cel) => (cel * (9 / 5) + 32);
+    const fahTOcel = (fehr) => ((fehr - 32) * 5 / 9);
+    const kelTOcel = (kel) => (kel - 273.15);
+    const celTOkel = (cel) => (cel + 273.15);
 
     let result;
-    if (valeTemp == "cel") {
+    if (valeTemp == "cel-fah") {
         result = celTOfah(numberTemp);
-        document.getElementById('resultContainer').innerHTML = `= ${result}°Fahrenheit`;
-    } else {
+        document.getElementById('resultContainer').innerHTML = `= ${result.toFixed(2)}° Fahrenheit`;
+    } 
+    else if (valeTemp == "fah-cel") {
         result = fahTOcel(numberTemp);
-        document.getElementById('resultContainer').innerHTML = `= ${result}°Celsius`;
+        document.getElementById('resultContainer').innerHTML = `= ${result.toFixed(2)}° Celsius`;
+    }
+    else if (valeTemp == "kel-cel") {
+        result = kelTOcel(numberTemp);
+        document.getElementById('resultContainer').innerHTML = `= ${result.toFixed(2)}° Celsius`;
+    }
+    else if (valeTemp == "cel-kel") {
+        result = celTOkel(numberTemp);
+        document.getElementById('resultContainer').innerHTML = `= ${result.toFixed(2)} Kelvin`;
     }
 
     setTimeout(() => {
-        window.location.reload();
+        document.getElementById('temp').value = "";
     }, 1500);
-}
-
+};
